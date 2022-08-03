@@ -14,7 +14,14 @@
       "name": "Name",
       "email": "Email Address",
       "password": "Password",
-      "passwordCheck": "Password Verification"
+      "passwordCheck": "Password Verification",
+      "companyName": "Company name",
+      "country": "Your country",
+      "city": "Your city",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phoneNumber": "Phone Number"
+      
     },
     "errors": {
       "name": {
@@ -31,6 +38,26 @@
       "passwordCheck": {
         "required": "Please, confirm your password",
         "match": "The password does not match"
+      },
+      "companyName": {
+        "required": "Enter your company name"
+      },
+      "country": {
+        "required": "Enter your country"
+      },
+      "city": {
+        "required": "Enter your city"
+      },
+      "firstName": {
+        "required": "Enter your first name"
+      },
+      "lastName": {
+        "required": "Enter your last name"
+      },
+      "phoneNumber": {
+        "required": "Enter your phone number",
+        "match" : "This phone number is not valid"
+        
       }
     }
   }
