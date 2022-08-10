@@ -23,6 +23,7 @@ declare module 'vue' {
     MobileSidebar: typeof import('./src/components/navigation/mobile/MobileSidebar.vue')['default']
     NotificationsMobileDropdown: typeof import('./src/components/partials/dropdowns/NotificationsMobileDropdown.vue')['default']
     Sidebar: typeof import('./src/components/navigation/desktop/Sidebar.vue')['default']
+    SignupField: typeof import('./src/components/pages/dashboards/business/SignupField.vue')['default']
     StackPopoverContent: typeof import('./src/components/partials/popover/StackPopoverContent.vue')['default']
     Toolbar: typeof import('./src/components/partials/toolbars/Toolbar.vue')['default']
     UIWidget: typeof import('./src/components/partials/widgets/ui-creative/UIWidget.vue')['default']
