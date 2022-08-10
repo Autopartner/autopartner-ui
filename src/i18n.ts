@@ -12,6 +12,7 @@ export function createI18n() {
   const i18n = createClientI18n({
     locale: defaultLocale.value,
     messages,
+    globalInjection: true,
   })
 
   return i18n

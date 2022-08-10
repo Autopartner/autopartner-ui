@@ -111,186 +111,65 @@ useHead({
                   <!-- Login Form -->
                   <form @submit="onSignup">
                     <div id="signin-form" class="login-form">
-                      <!-- Input -->
-                      <Field v-slot="{ field, errorMessage }" name="firstName">
-                        <VField>
-                          <VControl
-                            icon="feather:user"
-                            :has-error="Boolean(errorMessage)"
-                          >
-                            <input
-                              v-bind="field"
-                              class="input"
-                              type="text"
-                              :placeholder="t('auth.placeholder.firstName')"
-                            />
-                            <p v-if="errorMessage" class="help is-danger">
-                              {{ errorMessage }}
-                            </p>
-                          </VControl>
-                        </VField>
-                      </Field>
+                      <SignupField
+                        :name="'firstName'"
+                        :icon="'feather:user'"
+                        :placeholder="'auth.placeholder.firstName'"
+                      />
 
-                      <!-- Input -->
-                      <Field v-slot="{ field, errorMessage }" name="lastName">
-                        <VField>
-                          <VControl
-                            icon="feather:users"
-                            :has-error="Boolean(errorMessage)"
-                          >
-                            <input
-                              v-bind="field"
-                              class="input"
-                              type="text"
-                              :placeholder="t('auth.placeholder.lastName')"
-                            />
-                            <p v-if="errorMessage" class="help is-danger">
-                              {{ errorMessage }}
-                            </p>
-                          </VControl>
-                        </VField>
-                      </Field>
+                      <SignupField
+                        :name="'lastName'"
+                        :icon="'feather:users'"
+                        :placeholder="'auth.placeholder.lastName'"
+                      />
 
-                      <!-- Input -->
-                      <Field v-slot="{ field, errorMessage }" name="email">
-                        <VField>
-                          <VControl
-                            icon="feather:mail"
-                            :has-error="Boolean(errorMessage)"
-                          >
-                            <input
-                              v-bind="field"
-                              class="input"
-                              type="text"
-                              :placeholder="t('auth.placeholder.email')"
-                              autocomplete="email"
-                            />
-                            <p v-if="errorMessage" class="help is-danger">
-                              {{ errorMessage }}
-                            </p>
-                          </VControl>
-                        </VField>
-                      </Field>
+                      <SignupField
+                        :name="'email'"
+                        :icon="'feather:mail'"
+                        :placeholder="'auth.placeholder.email'"
+                      />
 
-                      <!-- Input -->
-                      <Field v-slot="{ field, errorMessage }" name="password">
-                        <VField>
-                          <VControl
-                            icon="feather:lock"
-                            :has-error="Boolean(errorMessage)"
-                          >
-                            <input
-                              v-bind="field"
-                              class="input"
-                              type="password"
-                              :placeholder="t('auth.placeholder.password')"
-                              autocomplete="new-password"
-                            />
-                            <p v-if="errorMessage" class="help is-danger">
-                              {{ errorMessage }}
-                            </p>
-                          </VControl>
-                        </VField>
-                      </Field>
+                      <SignupField
+                        :name="'password'"
+                        :icon="'feather:lock'"
+                        :placeholder="'auth.placeholder.password'"
+                      />
 
-                      <!-- Input -->
-                      <Field v-slot="{ field, errorMessage }" name="passwordCheck">
-                        <VField>
-                          <VControl
-                            icon="feather:lock"
-                            :has-error="Boolean(errorMessage)"
-                          >
-                            <input
-                              v-bind="field"
-                              class="input"
-                              type="password"
-                              :placeholder="t('auth.placeholder.passwordCheck')"
-                            />
-                            <p v-if="errorMessage" class="help is-danger">
-                              {{ errorMessage }}
-                            </p>
-                          </VControl>
-                        </VField>
-                      </Field>
+                      <SignupField
+                        :name="'passwordCheck'"
+                        :icon="'feather:lock'"
+                        :placeholder="'auth.placeholder.passwordCheck'"
+                      />
+                      
+                      <SignupField
+                        :name="'companyName'"
+                        :icon="'lnil lnil-briefcase'"
+                        :placeholder="'auth.placeholder.companyName'"
+                      />
 
-                      <!-- Input -->
-                      <Field v-slot="{ field, errorMessage }" name="companyName">
-                        <VField>
-                          <VControl
-                            icon="lnil lnil-briefcase"
-                            :has-error="Boolean(errorMessage)"
-                          >
-                            <input
-                              v-bind="field"
-                              class="input"
-                              type="text"
-                              :placeholder="t('auth.placeholder.companyName')"
-                            />
-                            <p v-if="errorMessage" class="help is-danger">
-                              {{ errorMessage }}
-                            </p>
-                          </VControl>
-                        </VField>
-                      </Field>
+                      <SignupField
+                        :name="'country'"
+                        :icon="'lnir lnir-house'"
+                        :placeholder="'auth.placeholder.country'"
+                      />
 
-                      <!-- Input -->
-                      <Field v-slot="{ field, errorMessage }" name="country">
-                        <VField>
-                          <VControl
-                            icon="lnir lnir-house"
-                            :has-error="Boolean(errorMessage)"
-                          >
-                            <input
-                              v-bind="field"
-                              class="input"
-                              type="text"
-                              :placeholder="t('auth.placeholder.country')"
-                            />
-                            <p v-if="errorMessage" class="help is-danger">
-                              {{ errorMessage }}
-                            </p>
-                          </VControl>
-                        </VField>
-                      </Field>
-
-                      <!-- Input -->
-                      <Field v-slot="{ field, errorMessage }" name="city">
-                        <VField>
-                          <VControl
-                            icon="lnir lnir-house"
-                            :has-error="Boolean(errorMessage)"
-                          >
-                            <input
-                              v-bind="field"
-                              class="input"
-                              type="text"
-                              :placeholder="t('auth.placeholder.city')"
-                            />
-                            <p v-if="errorMessage" class="help is-danger">
-                              {{ errorMessage }}
-                            </p>
-                          </VControl>
-                        </VField>
-                      </Field>
-                      <!-- Input -->
-                      <Field v-slot="{ field, errorMessage }" name="phoneNumber">
-                        <VField>
-                          <VControl
-                            icon="lnir lnir-phone-ring"
-                            :has-error="Boolean(errorMessage)"
-                          >
-                            <input
-                              v-bind="field"
-                              class="input"
-                              type="text"
-                              :placeholder="t('auth.placeholder.phoneNumber')"
-                            />
-                            <p v-if="errorMessage" class="help is-danger">
-                              {{ errorMessage }}
-                            </p>
-                          </VControl>
-                        </VField>
-                      </Field>
+                      <SignupField
+                        :name="'country'"
+                        :icon="'lnir lnir-house'"
+                        :placeholder="'auth.placeholder.country'"
+                      />
+                      
+                      <SignupField
+                        :name="'city'"
+                        :icon="'lnir lnir-house'"
+                        :placeholder="'auth.placeholder.city'"
+                      />
+                      
+                      <SignupField
+                        :name="'phoneNumber'"
+                        :icon="'lnir lnir-phone-ring'"
+                        :placeholder="'auth.placeholder.phoneNumber'"
+                      />
 
                       <VField>
                         <VControl class="setting-item">
