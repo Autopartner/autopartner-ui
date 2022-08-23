@@ -116,9 +116,17 @@ watch(
             <i
               aria-hidden="true"
               class="iconify sidebar-svg"
-              data-icon="feather:home"
+              data-icon="feather:menu"
             ></i>
           </a>
+        </li>
+      </template>
+        <template #links2>
+        <!-- Dashboards -->
+        <li>
+        <RouterLink :to="{ name: 'app' }">
+            <i aria-hidden="true" class="iconify" data-icon="feather:home"></i>
+          </RouterLink>
         </li>
       </template>
     </Sidebar>
