@@ -52,6 +52,8 @@ const themeClasses = computed(() => {
 
       <ul class="icon-menu has-slimscroll">
         <slot name="links"></slot>
+       <slot name="links2"></slot>
+       
       </ul>
 
       <!-- User account -->
