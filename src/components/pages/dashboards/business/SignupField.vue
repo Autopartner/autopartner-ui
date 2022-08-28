@@ -18,9 +18,9 @@
 </script>
 
 <template>
-  <Field v-slot="{ field, errorMessage }" :name=props.name>
+  <Field v-slot="{ field, errorMessage, meta }" :name=props.name>
     <VField>
-      <VControl :icon=props.icon :has-error="Boolean(errorMessage)">
+      <VControl :icon=props.icon :has-error="Boolean(errorMessage) && meta.dirty">
         <input
           v-bind=field
           class="input"
@@ -29,7 +29,7 @@
           v-bind:autocomplite="props.name === 'password' ? 'new-password' : null "
         />
         <slot :field="field"></slot>
-        <p v-if="errorMessage" class="help is-danger">
+        <p v-if="errorMessage && meta.dirty" class="help is-danger">
           {{ errorMessage }}
         </p>
       </VControl>
