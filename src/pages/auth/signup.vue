@@ -10,6 +10,8 @@ import { useDarkmode } from '/@src/stores/darkmode'
 import { useNotyf } from '/@src/composable/useNotyf'
 import sleep from '/@src/utils/sleep'
 
+import {createCompany} from '../../api/createCompany'
+
 const darkmode = useDarkmode()
 const router = useRouter()
 const notif = useNotyf()
@@ -17,12 +19,12 @@ const notif = useNotyf()
 const isLoading = ref(false)
 const { t } = useI18n()
 const phoneRegExp =
-  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+  /^\+38((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{0,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 // Define a validation schema
 const schema = yup.object({
   promotional: yup.mixed(),
-  name: yup.string().required(t('auth.errors.name.required')),
+  // name: yup.string().required(t('auth.errors.name.required')),
   email: yup
     .string()
     .required(t('auth.errors.email.required'))
@@ -35,15 +37,15 @@ const schema = yup.object({
     .string()
     .required(t('auth.errors.passwordCheck.required'))
     .oneOf([yup.ref('password')], t('auth.errors.passwordCheck.match')),
-  companyName: yup.string().required(t('auth.errors.companyName.required')),
+  name: yup.string().required(t('auth.errors.name.required')),
   country: yup.string().required(t('auth.errors.country.required')),
   city: yup.string().required(t('auth.errors.city.required')),
   firstName: yup.string().required(t('auth.errors.firstName.required')),
   lastName: yup.string().required(t('auth.errors.lastName.required')),
-  phoneNumber: yup
+  phone: yup
     .string()
-    .matches(phoneRegExp, t('auth.errors.phoneNumber.match'))
-    .required(t('auth.errors.phoneNumber.required')),
+    .matches(phoneRegExp, t('auth.errors.phone.match'))
+    .required(t('auth.errors.phone.required')),
 })
 
 const { handleSubmit } = useForm({
@@ -56,13 +58,19 @@ const onSignup = handleSubmit(async (values) => {
 
   if (!isLoading.value) {
     isLoading.value = true
-
-    await sleep(800)
-
     notif.dismissAll()
-    notif.success('Welcome, Erik Kovalsky')
 
-    router.push({ name: 'app' })
+    const response = await createCompany(values)
+
+    if (response?.status === 200) {
+      notif.success(`Welcome, ${values.firstName} ${values.lastName}`)
+
+      router.push({ name: 'app' })
+    } else {
+      notif.error({message: response, duration: 5000})
+    }
+    
+
     isLoading.value = false
   }
 })
@@ -96,10 +104,16 @@ useHead({
             </RouterLink>
           </div>
         </div>
+
+        <div :style="[isLoading ? {'position': 'absolute', 'height': '100%', 'width': '100%'} : {'display': 'none'}]">
+          <VLoader size="large" :active="isLoading" :translucent="true" :style="{height: '100%'}"></VLoader>
+        </div>
+        
         <div class="hero-body">
           <div class="container">
             <div class="columns">
               <div class="column is-12">
+        
                 <div class="auth-content">
                   <h2>{{ t('auth.title') }}</h2>
                   <p>{{ t('auth.subtitle') }}</p>
@@ -107,6 +121,7 @@ useHead({
                     {{ t('auth.action.login') }}
                   </RouterLink>
                 </div>
+
                 <div class="auth-form-wrapper">
                   <!-- Login Form -->
                   <form @submit="onSignup">
@@ -142,15 +157,9 @@ useHead({
                       />
                       
                       <SignupField
-                        :name="'companyName'"
+                        :name="'name'"
                         :icon="'lnil lnil-briefcase'"
-                        :placeholder="'auth.placeholder.companyName'"
-                      />
-
-                      <SignupField
-                        :name="'country'"
-                        :icon="'lnir lnir-house'"
-                        :placeholder="'auth.placeholder.country'"
+                        :placeholder="'auth.placeholder.name'"
                       />
 
                       <SignupField
@@ -166,9 +175,9 @@ useHead({
                       />
                       
                       <SignupField
-                        :name="'phoneNumber'"
+                        :name="'phone'"
                         :icon="'lnir lnir-phone-ring'"
-                        :placeholder="'auth.placeholder.phoneNumber'"
+                        :placeholder="'auth.placeholder.phone'"
                       />
 
                       <VField>
@@ -195,7 +204,7 @@ useHead({
 
                       <VField>
                         <VControl class="login">
-                          <VButton type="submit" color="primary" bold fullwidth raised>
+                          <VButton type="submit" color="primary" bold fullwidth raised >
                             {{ t('auth.action.signup') }}
                           </VButton>
                         </VControl>
@@ -203,6 +212,7 @@ useHead({
                     </div>
                   </form>
                 </div>
+
               </div>
             </div>
           </div>
