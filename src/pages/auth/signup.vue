@@ -8,21 +8,26 @@ import * as yup from 'yup'
 
 import { useDarkmode } from '/@src/stores/darkmode'
 import { useNotyf } from '/@src/composable/useNotyf'
-import sleep from '/@src/utils/sleep'
+import { useUserSession } from '/@src/stores/userSession'
 
 import {createCompany} from '../../api/createCompany'
 
 const darkmode = useDarkmode()
 const router = useRouter()
 const notif = useNotyf()
+const userSession = useUserSession()
 
 const isLoading = ref(false)
 const { t } = useI18n()
 const phoneRegExp =
   /^\+38((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{0,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
+interface Registration {
+  [key: string]: string;
+  name: string;
+}
 // Define a validation schema
-const schema = yup.object({
+const schema: yup.Schema<Registration> = yup.object({
   promotional: yup.mixed(),
   // name: yup.string().required(t('auth.errors.name.required')),
   email: yup
@@ -60,11 +65,12 @@ const onSignup = handleSubmit(async (values) => {
     isLoading.value = true
     notif.dismissAll()
 
-    const response = await createCompany(values)
+    const response = await createCompany(values as any)
 
     if (response?.status === 200) {
       notif.success(`Welcome, ${values.firstName} ${values.lastName}`)
 
+      userSession.setToken('logged-in')
       router.push({ name: 'app' })
     } else {
       notif.error({message: response, duration: 5000})
@@ -180,7 +186,7 @@ useHead({
                         :placeholder="'auth.placeholder.phone'"
                       />
 
-                      <VField>
+                      <!-- <VField>
                         <VControl class="setting-item">
                           <label for="promotional" class="form-switch is-primary">
                             <Field
@@ -198,7 +204,7 @@ useHead({
                             </label>
                           </div>
                         </VControl>
-                      </VField>
+                      </VField> -->
 
                       <!-- Submit -->
 
