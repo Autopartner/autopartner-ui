@@ -10,7 +10,6 @@ interface signupFieldsArgs {
     phone: string,
     password: string,
     passwordCheck: string,
-    promotional?: boolean
 }
 
 interface response {
@@ -26,7 +25,7 @@ export const createCompany = async (signupFields: signupFieldsArgs) => {
 
         return response;
     } catch (error : any) {
-        return error.message;
+        return error.response.data.message;
     }
 
 };
