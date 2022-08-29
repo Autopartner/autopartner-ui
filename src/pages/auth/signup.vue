@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useHead } from '@vueuse/head'
-import { Field, useForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 
 import { useDarkmode } from '/@src/stores/darkmode'
@@ -11,6 +11,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useUserSession } from '/@src/stores/userSession'
 
 import {createCompany} from '../../api/createCompany'
+import {login} from '../../api/login'
 
 const darkmode = useDarkmode()
 const router = useRouter()
@@ -68,15 +69,19 @@ const onSignup = handleSubmit(async (values) => {
     const response = await createCompany(values as any)
 
     if (response?.status === 200) {
-      notif.success(`Welcome, ${values.firstName} ${values.lastName}`)
+      const {token} = await login({email: values.email, password: values.password})
+      if (token) {
+        userSession.setToken(token)
+        notif.success(`Welcome, ${values.firstName} ${values.lastName}`)
 
-      userSession.setToken('logged-in')
-      router.push({ name: 'app' })
+        router.push({ name: 'app' })
+      } else {
+        notif.error({message: response, duration: 5000})
+      }
     } else {
       notif.error({message: response, duration: 5000})
     }
     
-
     isLoading.value = false
   }
 })
