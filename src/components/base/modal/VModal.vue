@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 export type VModalSize = 'small' | 'medium' | 'large' | 'big'
@@ -46,21 +45,6 @@ onUnmounted(() => {
   document.documentElement.classList.remove('no-scroll')
 })
 </script>
-
-<i18n lang="yaml">
-de:
-  cancel-label: 'Abbrechen'
-en:
-  cancel-label: 'Cancel'
-es-MX:
-  cancel-label: 'Cancelar'
-es:
-  cancel-label: 'Cancelar'
-fr:
-  cancel-label: 'Annuler'
-zh-CN:
-  cancel-label: '取消'
-</i18n>
 
 <template>
   <Teleport to="body">

@@ -1,65 +1,79 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { useVFieldContext } from '/@src/composable/useVFieldContext'
 
 export type VCheckboxColor = 'primary' | 'info' | 'success' | 'warning' | 'danger'
 export interface VCheckboxEmits {
-  (e: 'update:modelValue', value: (string | number)[]): void
+  (e: 'update:modelValue', value: any): void
 }
 export interface VCheckboxProps {
-  value?: string | number
+  raw?: boolean
   label?: string
   color?: VCheckboxColor
-  modelValue?: (string | number)[]
+  trueValue?: any
+  falseValue?: any
+  value?: any
+  modelValue?: any
   circle?: boolean
   solid?: boolean
   paddingless?: boolean
+  wrapperClass?: string
 }
 
-const emit = defineEmits<VCheckboxEmits>()
+const emits = defineEmits<VCheckboxEmits>()
 const props = withDefaults(defineProps<VCheckboxProps>(), {
-  value: undefined,
   label: undefined,
   color: undefined,
-  modelValue: () => [],
+  trueValue: true,
+  falseValue: false,
+  value: undefined,
+  modelValue: false,
   circle: false,
   solid: false,
   paddingless: false,
+  wrapperClass: undefined,
 })
 
-const checked = computed(() => props.modelValue.includes(props.value))
+const vFieldContext = reactive(useVFieldContext())
+const $value = ref((vFieldContext.field?.value ?? props.modelValue) as any)
 
-function change() {
-  const values = [...props.modelValue]
+const classes = computed(() => {
+  if (props.raw) return [props.wrapperClass]
 
-  if (checked.value) {
-    values.splice(values.indexOf(props.value), 1)
-  } else {
-    values.push(props.value)
+  return [
+    'checkbox',
+    props.wrapperClass,
+    props.solid ? 'is-solid' : 'is-outlined',
+    props.circle && 'is-circle',
+    props.color && `is-${props.color}`,
+    props.paddingless && 'is-paddingless',
+  ]
+})
+
+watch($value, () => {
+  emits('update:modelValue', $value.value)
+})
+watch(
+  () => props.modelValue,
+  () => {
+    $value.value = props.modelValue
   }
-  emit('update:modelValue', values)
-}
+)
 </script>
 
 <template>
-  <label
-    class="checkbox"
-    :class="[
-      props.solid ? 'is-solid' : 'is-outlined',
-      props.circle && 'is-circle',
-      props.color && `is-${props.color}`,
-      props.paddingless && 'is-paddingless',
-    ]"
-  >
+  <VLabel raw :class="classes">
     <input
-      type="checkbox"
-      :checked="checked"
-      :value="props.value"
+      :id="vFieldContext.id"
+      v-model="$value"
       v-bind="$attrs"
-      @change="change"
+      :true-value="props.trueValue"
+      :false-value="props.falseValue"
+      :value="props.value"
+      type="checkbox"
     />
     <span></span>
-    <slot>{{ props.label }}</slot>
-  </label>
+    <slot v-bind="vFieldContext">{{ props.label }}</slot>
+  </VLabel>
 </template>
 
 <style lang="scss">

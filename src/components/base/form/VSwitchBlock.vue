@@ -1,14 +1,10 @@
-<script lang="ts">
-let instances = 0
-</script>
-
 <script setup lang="ts">
 export type VSwitchBlockColor = 'primary' | 'info' | 'success' | 'warning' | 'danger'
 export interface VSwitchBlockEmits {
-  (e: 'update:modelValue', value: boolean): void
+  (e: 'update:modelValue', value: any): void
 }
 export interface VSwitchBlockProps {
-  modelValue?: boolean
+  modelValue?: any
   label?: string
   color?: VSwitchBlockColor
   thin?: boolean
@@ -21,10 +17,21 @@ const props = withDefaults(defineProps<VSwitchBlockProps>(), {
   color: undefined,
 })
 
-const blockSwitchId = `block-switch-${++instances}`
+const value = ref(props.modelValue)
+const attrs = useAttrs()
+
+watch(value, () => {
+  emit('update:modelValue', value.value)
+})
+watch(
+  () => props.modelValue,
+  () => {
+    value.value = props.modelValue
+  }
+)
 </script>
 
-<template inherit-attrs="false">
+<template>
   <div
     :class="[
       props.label && 'switch-block',
@@ -32,32 +39,21 @@ const blockSwitchId = `block-switch-${++instances}`
     ]"
   >
     <template v-if="props.thin">
-      <label
-        :for="blockSwitchId"
+      <VLabel
+        raw
         class="thin-switch"
         tabindex="0"
         :class="[props.color && `is-${props.color}`]"
         @keydown.space.prevent="() => emit('update:modelValue', !props.modelValue)"
       >
-        <input
-          :id="blockSwitchId"
-          :checked="props.modelValue"
-          class="input"
-          type="checkbox"
-          v-bind="$attrs"
-          @change="emit('update:modelValue', !props.modelValue)"
-        />
+        <VInput v-model="value" type="checkbox" v-bind="attrs" />
         <div class="slider"></div>
-      </label>
+      </VLabel>
     </template>
     <template v-else>
-      <label
-        :for="blockSwitchId"
-        class="form-switch"
-        :class="[props.color && `is-${props.color}`]"
-      >
-        <input
-          :id="blockSwitchId"
+      <VLabel raw class="form-switch" :class="[props.color && `is-${props.color}`]">
+        <VInput
+          raw
           :checked="props.modelValue"
           type="checkbox"
           class="is-switch"
@@ -65,13 +61,13 @@ const blockSwitchId = `block-switch-${++instances}`
           @change="emit('update:modelValue', !props.modelValue)"
         />
         <i aria-hidden="true"></i>
-      </label>
+      </VLabel>
     </template>
 
     <div v-if="props.label" class="text">
-      <label :for="blockSwitchId">
+      <VLabel raw>
         <span>{{ props.label }}</span>
-      </label>
+      </VLabel>
     </div>
   </div>
 </template>
@@ -391,7 +387,7 @@ const blockSwitchId = `block-switch-${++instances}`
       background: var(--light-grey);
       position: absolute;
       left: -8px;
-      top: (7px - 24px) / 2;
+      top: -8.5px;
       display: block;
       width: 24px;
       height: 24px;

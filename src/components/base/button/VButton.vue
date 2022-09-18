@@ -1,13 +1,12 @@
 <script lang="ts">
+import type { RouteLocationAsString } from 'unplugin-vue-router'
 import type { PropType } from 'vue'
-import type { RouteLocationRaw } from 'vue-router'
+import { RouterLink } from 'vue-router/auto'
 import { CssUnitRe } from '/@src/utils/regex'
-import { computed, defineComponent, h } from 'vue'
-import { RouterLink } from 'vue-router'
 
 import VPlaceload from '../loader/VPlaceload.vue'
 
-export type VButtonSize = 'big' | 'huge'
+export type VButtonSize = 'medium' | 'big' | 'huge'
 export type VButtonColor =
   | 'primary'
   | 'info'
@@ -22,7 +21,7 @@ export type VButtonDark = '1' | '2' | '3' | '4' | '5' | '6'
 export default defineComponent({
   props: {
     to: {
-      type: [Object, String] as PropType<RouteLocationRaw>,
+      type: [Object, String] as PropType<RouteLocationAsString>,
       default: undefined,
     },
     href: {
@@ -82,9 +81,9 @@ export default defineComponent({
       default: undefined,
       validator: (value: VButtonSize) => {
         // The value must match one of these strings
-        if ([undefined, 'big', 'huge'].indexOf(value) === -1) {
+        if ([undefined, 'medium', 'big', 'huge'].indexOf(value) === -1) {
           console.warn(
-            `VButton: invalid "${value}" size. Should be big, huge or undefined`
+            `VButton: invalid "${value}" size. Should be big, huge, medium or undefined`
           )
           return false
         }
@@ -151,10 +150,14 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    static: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props, { slots, attrs }) {
     const classes = computed(() => {
-      const defaultClasses = (attrs?.class ?? []) as string[]
+      const defaultClasses: string[] = []
       return [
         ...defaultClasses,
         'button',
@@ -173,6 +176,7 @@ export default defineComponent({
         props.loading && !props.placeload && 'is-loading',
         props.color && `is-${props.color}`,
         props.light && 'is-light',
+        props.static && 'is-static',
       ]
     })
     const isIconify = computed(() => props.icon && props.icon.indexOf(':') !== -1)
@@ -299,6 +303,15 @@ export default defineComponent({
       border-color: var(--fade-grey-dark-2);
     }
 
+    &:not(.is-primary, .is-success, .is-info, .is-warning, .is-danger, .is-light, .is-white) {
+      &.is-active {
+        background: var(--primary) !important;
+        border-color: var(--primary) !important;
+        color: var(--white) !important;
+        box-shadow: var(--primary-box-shadow) !important;
+      }
+    }
+
     &:focus-visible {
       outline-offset: var(--accessibility-focus-outline-offset);
       outline-width: var(--accessibility-focus-outline-width);
@@ -374,6 +387,11 @@ export default defineComponent({
       height: 40px;
     }
 
+    &.is-medium {
+      height: 2.5rem;
+      font-size: 1rem;
+    }
+
     &.is-huge {
       height: 50px;
       width: 220px;
@@ -430,7 +448,7 @@ export default defineComponent({
 
 .is-dark {
   .v-button {
-    &:not(.is-primary):not(.is-success):not(.is-info):not(.is-warning):not(.is-danger):not(.is-light):not(.is-white) {
+    &:not(.is-primary, .is-success, .is-info, .is-warning, .is-danger, .is-light, .is-white) {
       background: var(--dark-sidebar-light-10);
       border-color: var(--dark-sidebar-light-12);
       color: var(--dark-dark-text);
@@ -492,7 +510,7 @@ export default defineComponent({
   }
 
   .button {
-    &:not(.is-primary):not(.is-success):not(.is-info):not(.is-warning):not(.is-danger):not(.is-light):not(.is-white) {
+    &:not(.is-primary, .is-success, .is-info, .is-warning, .is-danger, .is-light, .is-white) {
       background: var(--dark-sidebar-light-10);
       border-color: var(--dark-sidebar-light-12);
       color: var(--dark-dark-text);

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
 
 export type VIconWrapDark = '1' | '2' | '3' | '4' | '5' | '6'
@@ -10,6 +9,7 @@ export type VIconWrapColor =
   | 'light'
   | 'dark'
   | 'primary'
+  | 'secondary'
   | 'link'
   | 'info'
   | 'success'
@@ -62,7 +62,7 @@ const isIconify = computed(() => {
       v-if="props.picture"
       :src="props.picture"
       alt=""
-      @error.once="(event) => onceImageErrored(event, '32x32')"
+      @error.once="onceImageErrored(32)"
     />
     <i
       v-else-if="isIconify"

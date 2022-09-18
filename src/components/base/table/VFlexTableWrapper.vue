@@ -1,19 +1,5 @@
 <script lang="ts">
-import type { PropType } from 'vue'
-
-import {
-  InjectionKey,
-  defineComponent,
-  computed,
-  reactive,
-  ref,
-  h,
-  watch,
-  provide,
-  watchEffect,
-} from 'vue'
-import { useDebounce } from '@vueuse/core'
-
+import type { InjectionKey, PropType } from 'vue'
 import type { VFlexTableColumn } from './VFlexTable.vue'
 import VFlexTableSortColumn from './VFlexTableSortColumn.vue'
 
@@ -22,7 +8,7 @@ export type VFlexTableWrapperDataResolver<T = any> = (parameters: {
   start: number
   limit: number
   sort?: string
-  controller: AbortController
+  controller?: AbortController
 }) => T[] | Promise<T[]>
 
 export type VFlexTableWrapperSortFunction<T = any> = (parameters: {
@@ -336,17 +322,8 @@ export default defineComponent({
       total.value ? Math.ceil(total.value / limit.value) : 0
     )
 
-    watch([searchTerm, limit], () => {
-      if (page.value !== 1) {
-        page.value = 1
-      }
-    })
-
-    watchEffect(async (onInvalidate) => {
-      let controller: AbortController
-
+    async function fetchData(controller?: AbortController) {
       if (typeof props.data === 'function') {
-        controller = new AbortController()
         loading.value = true
 
         try {
@@ -360,6 +337,21 @@ export default defineComponent({
         } finally {
           loading.value = false
         }
+      }
+    }
+
+    watch([searchTerm, limit], () => {
+      if (page.value !== 1) {
+        page.value = 1
+      }
+    })
+
+    watchEffect(async (onInvalidate) => {
+      let controller: AbortController
+
+      if (typeof props.data === 'function') {
+        controller = new AbortController()
+        await fetchData(controller)
       } else {
         rawData.value = props.data
       }
@@ -381,9 +373,11 @@ export default defineComponent({
       sort,
       total,
       totalPages,
+      fetchData,
     }) as VFlexTableWrapperInjection
 
     provide(flewTableWrapperSymbol, wrapperState)
+    context.expose(wrapperState)
 
     return () => {
       const slotContent = context.slots.default?.(wrapperState)

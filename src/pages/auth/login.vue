@@ -1,42 +1,64 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
 import { useHead } from '@vueuse/head'
+import { toFormValidator } from '@vee-validate/zod'
+import { useForm } from 'vee-validate'
+import { z as zod } from 'zod'
 
 import { useDarkmode } from '/@src/stores/darkmode'
-import { useUserSession } from '/@src/stores/userSession'
 import { useNotyf } from '/@src/composable/useNotyf'
-import sleep from '/@src/utils/sleep'
+import { useUserSession } from '/@src/stores/userSession'
+import { login } from '/@src/api/login'
 
-const isLoading = ref(false)
 const darkmode = useDarkmode()
 const router = useRouter()
-const route = useRoute()
 const notif = useNotyf()
 const userSession = useUserSession()
-const redirect = route.query.redirect as string
 
-const handleLogin = async () => {
+const isLoading = ref(false)
+const { t } = useI18n()
+
+const validationSchema = toFormValidator(
+  zod.object({
+    email: zod
+      .string({
+        required_error: t('auth.errors.email.required'),
+      })
+      .email(t('auth.errors.email.format')),
+    password: zod
+      .string({
+        required_error: t('auth.errors.password.required'),
+      })
+      .min(6, t('auth.errors.password.required')),
+  })
+)
+
+const { handleSubmit } = useForm({
+  validationSchema,
+})
+
+const onLogin = handleSubmit(async (values) => {
+  console.log('handleSignup values')
+  console.table(values)
+
   if (!isLoading.value) {
     isLoading.value = true
-
-    await sleep(2000)
-    userSession.setToken('logged-in')
-
     notif.dismissAll()
-    notif.success('Welcome back, username')
 
-    if (redirect) {
-      router.push(redirect)
+    const { token } = await login({ email: values.email, password: values.password })
+    if (token) {
+      userSession.setToken(token)
+      notif.success(`Welcome, ${values.email}`)
+
+      router.push({ name: '/app' })
     } else {
-      router.push({
-        name: 'app',
-      })
+      notif.error({ message: 'Login failed', duration: 5000 })
     }
 
     isLoading.value = false
   }
-}
+})
 
 useHead({
   title: 'Auth Login',
@@ -87,7 +109,7 @@ useHead({
             <span></span>
           </label>
           <div class="auth-logo">
-            <RouterLink :to="{ name: 'index' }">
+            <RouterLink to="/">
               <AnimatedLogo width="36px" height="36px" />
             </RouterLink>
           </div>
@@ -99,68 +121,47 @@ useHead({
                 <div class="auth-content">
                   <h2>Welcome Back.</h2>
                   <p>Please sign in to your account</p>
-                  <!--<RouterLink :to="{ name: 'auth-signup' }">
+                  <RouterLink to="/auth/signup">
                     I do not have an account yet
-                  </RouterLink>-->
+                  </RouterLink>
                 </div>
                 <div class="auth-form-wrapper">
                   <!-- Login Form -->
-                  <form @submit.prevent="handleLogin">
+                  <form @submit="onLogin">
                     <div class="login-form">
                       <!-- Username -->
-                      <VField>
-                        <VControl icon="feather:user">
-                          <input
-                            class="input"
-                            type="text"
-                            placeholder="Username"
-                            autocomplete="username"
-                          />
-                        </VControl>
-                      </VField>
+                      <SignupField
+                        :type="'text'"
+                        :name="'email'"
+                        :icon="'feather:user'"
+                        :placeholder="'Email'"
+                      />
 
                       <!-- Password -->
-                      <VField>
-                        <VControl icon="feather:lock">
-                          <input
-                            class="input"
-                            type="password"
-                            placeholder="Password"
-                            autocomplete="current-password"
-                          />
-                        </VControl>
-                      </VField>
-
-                      <!-- Switch -->
-                      <!--<VControl class="setting-item">
-                        <label for="remember-me" class="form-switch is-primary">
-                          <input id="remember-me" type="checkbox" class="is-switch" />
-                          <i aria-hidden="true"></i>
-                        </label>
-                        <div class="setting-meta">
-                          <label for="remember-me">
-                            <span>Remember Me</span>
-                          </label>
-                        </div>
-                      </VControl>-->
+                      <SignupField
+                        :type="'password'"
+                        :name="'password'"
+                        :icon="'feather:lock'"
+                        :placeholder="'Password'"
+                      />
 
                       <!-- Submit -->
-                      <VControl class="login">
-                        <VButton
-                          :loading="isLoading"
-                          color="primary"
-                          type="submit"
-                          bold
-                          fullwidth
-                          raised
-                        >
-                          Sign In
-                        </VButton>
-                      </VControl>
-
-                      <!--<div class="forgot-link has-text-centered">
-                        <a>Forgot Password?</a>
-                      </div>-->
+                      <div class="login">
+                        <VField>
+                          <VControl class="login">
+                            <VButton
+                              :loading="isLoading"
+                              color="primary"
+                              type="submit"
+                              bold
+                              fullwidth
+                              raised
+                            >
+                              Sign In
+                            </VButton>
+                          </VControl>
+                        </VField>
+                      </div>
                     </div>
                   </form>
                 </div>

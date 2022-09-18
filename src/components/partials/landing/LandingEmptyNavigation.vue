@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useWindowScroll } from '@vueuse/core'
-import { computed, ref, watchEffect } from 'vue'
 import VueScrollTo from 'vue-scrollto'
 
 import { isLargeScreen } from '/@src/utils/responsive'
@@ -56,9 +54,7 @@ watchEffect(() => {
       <div class="navbar-start">
         <div class="navbar-item">
           <RouterLink
-            :to="{
-              name: 'index',
-            }"
+            to="/"
             class="nav-link"
             @click.passive="
               () => {
@@ -67,7 +63,7 @@ watchEffect(() => {
               }
             "
           >
-            Autopartner
+            Awesome Features
           </RouterLink>
         </div>
       </div>
@@ -78,6 +74,7 @@ watchEffect(() => {
             <input
               id="navbar-night-toggle--daynight"
               v-model="darkmode.isDark"
+              data-cy="dark-mode-toggle"
               type="checkbox"
             />
             <span class="toggler">
@@ -91,12 +88,12 @@ watchEffect(() => {
           </label>
         </div>
         <div class="navbar-item">
-          <RouterLink :to="{ name: 'auth-signup' }" class="nav-link">
-            Sign up
-          </RouterLink>
+          <RouterLink to="/auth/login" class="nav-link"> Login </RouterLink>
         </div>
         <div class="navbar-item">
-          <RouterLink :to="{ name: 'auth-login' }" class="nav-link"> Login </RouterLink>
+          <VButton to="/auth/signup" color="primary" rounded raised>
+            <strong>Sign up</strong>
+          </VButton>
         </div>
       </div>
     </div>

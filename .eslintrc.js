@@ -3,7 +3,6 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    'vue/setup-compiler-macros': true
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',
@@ -49,7 +48,6 @@ module.exports = {
         'vuejs-accessibility/form-control-has-label': 'off',
         'vuejs-accessibility/label-has-for': 'off',
         'vuejs-accessibility/anchor-has-content': 'off',
-        'endOfLine': 'auto'
       },
     },
   ],
