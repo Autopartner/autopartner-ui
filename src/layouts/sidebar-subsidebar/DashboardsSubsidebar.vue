@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const openSubsidebarLinks = ref('')
 const emit = defineEmits(['close'])
 </script>
 
@@ -26,19 +27,19 @@ const emit = defineEmits(['close'])
 
         <li class="divider"></li>
 
-        <VCollapseLinks>
+        <VCollapseLinks v-model:open="openSubsidebarLinks" collapse-id="warehouse">
           <template #header>
             Warehouse
             <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right" />
           </template>
 
           <RouterLink to="app" class="is-submenu">
-            <i aria-hidden="true" class="lnil"></i>
+            <i aria-hidden="true" class="lnil lnil-user"></i>
             <span>Suppliers</span>
           </RouterLink>
 
           <RouterLink to="app" class="is-submenu">
-            <i aria-hidden="true" class="lnil"></i>
+            <i aria-hidden="true" class="lnil "></i>
             <span>Supplies</span>
           </RouterLink>
 
@@ -48,7 +49,7 @@ const emit = defineEmits(['close'])
           </RouterLink>
         </VCollapseLinks>
 
-        <VCollapseLinks>
+        <VCollapseLinks v-model:open="openSubsidebarLinks" collapse-id="dictionaries">
           <template #header>
             Dictionaries
             <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right" />
