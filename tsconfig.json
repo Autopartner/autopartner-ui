@@ -17,6 +17,7 @@
     "types": [
       "vite/client",
       "vite-plugin-pwa/client",
+      "vite-plugin-pages/client",
       "@intlify/vite-plugin-vue-i18n/client",
       "typed-router.d.ts"
     ],
@@ -32,7 +33,11 @@
     "components-global.d.ts",
     "src/**/*.js",
     "src/**/*.ts",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "documentation/**/*.md"
   ],
   "exclude": ["bulma-colors.ts"]
 }

@@ -66,7 +66,7 @@
     "@iconify/iconify": "2.2.1",
     "@mapbox/mapbox-gl-geocoder": "5.0.1",
     "@popperjs/core": "2.11.6",
-    "@vee-validate/zod": "4.6.7",
+    "@vee-validate/zod": "^4.6.7",
     "@vueform/multiselect": "2.5.2",
     "@vueform/slider": "2.1.2",
     "@vueuse/core": "9.1.1",
@@ -105,7 +105,7 @@
     "tippy.js": "6.3.7",
     "tslib": "2.4.0",
     "v-calendar": "3.0.0-alpha.8",
-    "vee-validate": "4.6.7",
+    "vee-validate": "^4.6.7",
     "vivus": "0.4.6",
     "vue": "3.2.38",
     "vue-accessible-color-picker": "4.0.6",
@@ -114,7 +114,7 @@
     "vue-scrollto": "2.20.0",
     "vue-tippy": "6.0.0-alpha.63",
     "vue3-apexcharts": "1.4.1",
-    "zod": "3.18.0"
+    "zod": "^3.19.0-beta.0"
   },
   "devDependencies": {
     "@commitlint/cli": "17.1.2",
@@ -123,8 +123,8 @@
     "@intlify/vite-plugin-vue-i18n": "7.0.0-beta.2",
     "@nuxt/devalue": "^2.0.0",
     "@types/dragula": "3.7.1",
-    "@types/mapbox-gl": "2.7.5",
     "@types/mapbox__mapbox-gl-geocoder": "4.7.3",
+    "@types/mapbox-gl": "2.7.5",
     "@types/markdown-it": "12.2.3",
     "@types/node": "18.7.14",
     "@types/nprogress": "0.2.0",

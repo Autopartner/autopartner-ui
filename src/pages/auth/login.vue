@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { onMounted } from 'vue'
 
 import { useHead } from '@vueuse/head'
 import { toFormValidator } from '@vee-validate/zod'
@@ -57,6 +58,12 @@ const onLogin = handleSubmit(async (values) => {
     }
 
     isLoading.value = false
+  }
+})
+
+onMounted(() => {
+  if (userSession.token) {
+    router.push({ name: '/app' })
   }
 })
 

@@ -38,7 +38,7 @@ const emit = defineEmits(['close'])
             <span>Suppliers</span>
           </RouterLink>
 
-          <RouterLink to="app" class="is-submenu">
+          <RouterLink to="test-page" class="is-submenu">
             <i aria-hidden="true" class="lnil "></i>
             <span>Supplies</span>
           </RouterLink>

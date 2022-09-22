@@ -27,23 +27,33 @@ const validationSchema = toFormValidator(
   zod
     .object({
       email: zod
-        .string({
-          required_error: t('auth.errors.email.required'),
-        })
-        .email(t('auth.errors.email.format')),
+        .string({ required_error: t('auth.errors.email.required') })
+        .email({ message: t('auth.errors.email.format') }),
       password: zod
-        .string({
-          required_error: t('auth.errors.password.required'),
-        })
-        .min(6, t('auth.errors.password.required')),
-      passwordCheck: zod.string({
-        required_error: t('auth.errors.passwordCheck.required'),
-      }),
-      name: zod.string({ required_error: t('auth.errors.name.required') }),
-      country: zod.string({ required_error: t('auth.errors.country.required') }),
-      city: zod.string({ required_error: t('auth.errors.city.required') }),
-      firstName: zod.string({ required_error: t('auth.errors.firstName.required') }),
-      lastName: zod.string({ required_error: t('auth.errors.lastName.required') }),
+	  	.string({ required_error: t('auth.errors.password.length') })
+		.min(8, { message: t('auth.errors.password.length') }),
+      passwordCheck: zod
+	  	.string({ required_error: t('auth.errors.passwordCheck.required') }),
+      name: zod
+        .string({ required_error: t('auth.errors.name.required') })
+        .min(3)
+        .max(256),
+      country: zod
+        .string({ required_error: t('auth.errors.country.required') })
+        .min(3)
+        .max(256),
+      city: zod
+        .string({ required_error: t('auth.errors.city.required') })
+        .min(3)
+        .max(256),
+      firstName: zod
+        .string({ required_error: t('auth.errors.firstName.required') })
+        .min(3)
+        .max(256),
+      lastName: zod
+        .string({ required_error: t('auth.errors.lastName.required') })
+        .min(3)
+        .max(256),
       phone: zod
         .string({ required_error: t('auth.errors.phone.required') })
         .regex(phoneRegExp, t('auth.errors.phone.required')),
@@ -83,6 +93,12 @@ const onSignup = handleSubmit(async (values) => {
     }
 
     isLoading.value = false
+  }
+})
+
+onMounted(() => {
+  if (userSession.token) {
+    router.push({ name: '/app' })
   }
 })
 
