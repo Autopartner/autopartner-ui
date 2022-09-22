@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 export type SidebarTheme =
   | 'default'
   | 'color'
@@ -43,7 +41,7 @@ const themeClasses = computed(() => {
 <template>
   <div class="main-sidebar" :class="[themeClasses]">
     <div class="sidebar-brand">
-      <RouterLink :to="{ name: 'index' }">
+      <RouterLink to="/">
         <AnimatedLogo width="36px" />
       </RouterLink>
     </div>
@@ -52,8 +50,6 @@ const themeClasses = computed(() => {
 
       <ul class="icon-menu has-slimscroll">
         <slot name="links"></slot>
-       <slot name="links2"></slot>
-       
       </ul>
 
       <!-- User account -->
@@ -598,12 +594,14 @@ const themeClasses = computed(() => {
         .dropdown-item {
           color: var(--white);
 
-          &:not(.is-button):hover {
+          &:hover,
+          &:focus:not(.is-button) {
             background: var(--dark-sidebar-light-5);
           }
 
           &.is-button {
-            &:hover {
+            &:hover,
+            &:focus {
               background: var(--dark-sidebar-light-2) !important;
             }
           }

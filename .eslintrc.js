@@ -3,7 +3,6 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    'vue/setup-compiler-macros': true
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',

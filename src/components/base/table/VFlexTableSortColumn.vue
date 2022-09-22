@@ -1,6 +1,5 @@
 <script lang="ts">
-import { h, defineComponent, computed } from 'vue'
-import { RouterLink, useRoute, RouteLocationOptions } from 'vue-router'
+import { RouteLocationOptions, RouterLink } from 'vue-router/auto'
 
 export default defineComponent({
   props: {

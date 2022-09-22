@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import type { RouteLocationAsString } from 'unplugin-vue-router'
 
 export type VTabsType = 'boxed' | 'toggle' | 'rounded'
 export type VTabsAlign = 'centered' | 'right'
@@ -7,6 +7,7 @@ export interface VTabsItem {
   label: string
   value: string
   icon?: string
+  to?: RouteLocationAsString
 }
 export interface VTabsProps {
   tabs: VTabsItem[]
@@ -17,6 +18,9 @@ export interface VTabsProps {
   slow?: boolean
 }
 
+const emit = defineEmits<{
+  (e: 'update:selected', value: string): void
+}>()
 const props = withDefaults(defineProps<VTabsProps>(), {
   selected: undefined,
   type: undefined,
@@ -55,6 +59,17 @@ const sliderClass = computed(() => {
 function toggle(value: string) {
   activeValue.value = value
 }
+
+watch(
+  () => props.selected,
+  (value) => {
+    activeValue.value = value
+  }
+)
+
+watch(activeValue, (value) => {
+  emit('update:selected', value)
+})
 </script>
 
 <template>
@@ -78,28 +93,34 @@ function toggle(value: string) {
           >
             <slot
               name="tab-link"
-              :activeValue="activeValue"
-              :tab="tab"
-              :index="key"
-              :toggle="toggle"
+              v-bind="{
+                activeValue,
+                tab,
+                key,
+                toggle,
+              }"
             >
-              <a
+              <RouterLink
                 tabindex="0"
-                @keydown.space.prevent="toggle(tab.value)"
+                :to="tab.to ?? '#'"
+                @keydown.enter="toggle(tab.value)"
                 @click="toggle(tab.value)"
               >
                 <VIcon v-if="tab.icon" :icon="tab.icon" />
                 <span>
                   <slot
                     name="tab-link-label"
-                    :activeValue="activeValue"
-                    :tab="tab"
-                    :index="key"
+                    v-bind="{
+                      activeValue,
+                      tab,
+                      key,
+                      toggle,
+                    }"
                   >
                     {{ tab.label }}
                   </slot>
                 </span>
-              </a>
+              </RouterLink>
             </slot>
           </li>
           <li v-if="sliderClass" class="tab-naver"></li>
@@ -109,7 +130,12 @@ function toggle(value: string) {
 
     <div class="tab-content is-active">
       <Transition :name="props.slow ? 'fade-slow' : 'fade-fast'" mode="out-in">
-        <slot name="tab" :activeValue="activeValue"></slot>
+        <slot
+          name="tab"
+          v-bind="{
+            activeValue,
+          }"
+        ></slot>
       </Transition>
     </div>
   </div>

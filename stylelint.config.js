@@ -23,14 +23,22 @@ module.exports = {
     'keyframes-name-pattern': null,
     'selector-class-pattern': null,
     'custom-property-pattern': null,
+    'annotation-no-unknown': null,
     'declaration-block-no-redundant-longhand-properties': null,
 
     /** Bulma **/
     'function-name-case': null,
     'scss/dollar-variable-pattern': null,
     'no-duplicate-selectors': null, // TODO
+    'function-no-unknown': [
+      true,
+      {
+        ignoreFunctions: ['findColorInvert', 'nth', 'v-bind'],
+      },
+    ],
 
     /** Vuejs **/
+    'value-keyword-case': null,
     'custom-property-empty-line-before': null,
     'selector-pseudo-element-no-unknown': [
       true,

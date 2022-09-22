@@ -1,7 +1,6 @@
 <script lang="ts">
-import type { PropType, ComponentPropsOptions, EmitsOptions } from 'vue'
 import type { FilePondEvent, FilePondOptions } from 'filepond'
-import { onMounted, onUnmounted, ref, defineComponent, h } from 'vue'
+
 import * as FilePond from 'filepond'
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
@@ -98,10 +97,15 @@ export default defineComponent({
     },
   },
   emits: ['input', ...eventNames],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const pond = ref<FilePond.FilePond>()
     const inputElement = ref<HTMLInputElement>()
     const pondOptions = Object.assign({}, { ...props }) as FilePondOptions
+
+    expose({
+      pond,
+      inputElement,
+    })
 
     onMounted(() => {
       if (inputElement.value && FilePond.supported()) {

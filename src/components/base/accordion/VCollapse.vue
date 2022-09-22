@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
 export interface VCollapseItem {
   title: string
   content: string
+  value?: any
+  url?: string
 }
 export interface VCollapseProps {
   items: VCollapseItem[]
@@ -47,9 +47,12 @@ const toggle = (key: number) => {
             {{ item.title }}
           </slot>
         </h3>
-        <div class="collapse-icon">
-          <VIcon v-if="withChevron" icon="feather:chevron-down" />
-          <VIcon v-else-if="!withChevron" icon="feather:plus" />
+        <div class="collapse-head-info">
+          <slot name="collapse-item-head" :item="item" :index="key"></slot>
+          <div class="collapse-icon">
+            <VIcon v-if="withChevron" icon="feather:chevron-down" />
+            <VIcon v-else-if="!withChevron" icon="feather:plus" />
+          </div>
         </div>
       </summary>
       <div class="collapse-content">
@@ -64,7 +67,7 @@ const toggle = (key: number) => {
 </template>
 
 <style lang="scss">
-@import '../../../scss/abstracts/mixins';
+@import '/@src/scss/abstracts/all';
 
 .collapse {
   @include vuero-s-card;
@@ -108,6 +111,7 @@ const toggle = (key: number) => {
   }
 
   .collapse-header {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -120,6 +124,12 @@ const toggle = (key: number) => {
       font-size: 0.9rem;
       font-weight: 600;
       color: var(--dark-text);
+    }
+
+    .collapse-head-info {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
     }
 
     .collapse-icon {

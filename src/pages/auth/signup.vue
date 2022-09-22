@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+
 import { useHead } from '@vueuse/head'
+import { toFormValidator } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import * as yup from 'yup'
+import { z as zod } from 'zod'
 
 import { useDarkmode } from '/@src/stores/darkmode'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useUserSession } from '/@src/stores/userSession'
 
-import {createCompany} from '../../api/createCompany'
-import {login} from '../../api/login'
+import { createCompany } from '../../api/createCompany'
+import { login } from '../../api/login'
 
 const darkmode = useDarkmode()
 const router = useRouter()
@@ -23,39 +23,49 @@ const { t } = useI18n()
 const phoneRegExp =
   /^\+38((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{0,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
-interface Registration {
-  [key: string]: string;
-  name: string;
-}
-// Define a validation schema
-const schema: yup.Schema<Registration> = yup.object({
-  promotional: yup.mixed(),
-  // name: yup.string().required(t('auth.errors.name.required')),
-  email: yup
-    .string()
-    .required(t('auth.errors.email.required'))
-    .email(t('auth.errors.email.format')),
-  password: yup
-    .string()
-    .required(t('auth.errors.password.required'))
-    .min(8, t('auth.errors.password.length')),
-  passwordCheck: yup
-    .string()
-    .required(t('auth.errors.passwordCheck.required'))
-    .oneOf([yup.ref('password')], t('auth.errors.passwordCheck.match')),
-  name: yup.string().required(t('auth.errors.name.required')),
-  country: yup.string().required(t('auth.errors.country.required')),
-  city: yup.string().required(t('auth.errors.city.required')),
-  firstName: yup.string().required(t('auth.errors.firstName.required')),
-  lastName: yup.string().required(t('auth.errors.lastName.required')),
-  phone: yup
-    .string()
-    .matches(phoneRegExp, t('auth.errors.phone.match'))
-    .required(t('auth.errors.phone.required')),
-})
+const validationSchema = toFormValidator(
+  zod
+    .object({
+      email: zod
+        .string({ required_error: t('auth.errors.email.required') })
+        .email({ message: t('auth.errors.email.format') }),
+      password: zod
+	  	.string({ required_error: t('auth.errors.password.length') })
+		.min(8, { message: t('auth.errors.password.length') }),
+      passwordCheck: zod
+	  	.string({ required_error: t('auth.errors.passwordCheck.required') }),
+      name: zod
+        .string({ required_error: t('auth.errors.name.required') })
+        .min(3)
+        .max(256),
+      country: zod
+        .string({ required_error: t('auth.errors.country.required') })
+        .min(3)
+        .max(256),
+      city: zod
+        .string({ required_error: t('auth.errors.city.required') })
+        .min(3)
+        .max(256),
+      firstName: zod
+        .string({ required_error: t('auth.errors.firstName.required') })
+        .min(3)
+        .max(256),
+      lastName: zod
+        .string({ required_error: t('auth.errors.lastName.required') })
+        .min(3)
+        .max(256),
+      phone: zod
+        .string({ required_error: t('auth.errors.phone.required') })
+        .regex(phoneRegExp, t('auth.errors.phone.required')),
+    })
+    .refine((data) => data.password === data.passwordCheck, {
+      message: t('auth.errors.passwordCheck.match'),
+      path: ['passwordCheck'],
+    })
+)
 
 const { handleSubmit } = useForm({
-  validationSchema: schema,
+  validationSchema,
 })
 
 const onSignup = handleSubmit(async (values) => {
@@ -69,20 +79,26 @@ const onSignup = handleSubmit(async (values) => {
     const response = await createCompany(values as any)
 
     if (response?.status === 200) {
-      const {token} = await login({email: values.email, password: values.password})
+      const { token } = await login({ email: values.email, password: values.password })
       if (token) {
         userSession.setToken(token)
         notif.success(`Welcome, ${values.firstName} ${values.lastName}`)
 
-        router.push({ name: 'app' })
+        router.push({ name: '/app' })
       } else {
-        notif.error({message: response, duration: 5000})
+        notif.error({ message: response, duration: 5000 })
       }
     } else {
-      notif.error({message: response, duration: 5000})
+      notif.error({ message: response, duration: 5000 })
     }
-    
+
     isLoading.value = false
+  }
+})
+
+onMounted(() => {
+  if (userSession.token) {
+    router.push({ name: '/app' })
   }
 })
 
@@ -110,25 +126,35 @@ useHead({
             <span></span>
           </label>
           <div class="auth-logo">
-            <RouterLink :to="{ name: 'index' }">
+            <RouterLink to="/">
               <AnimatedLogo class="top-logo" width="36px" height="36px" />
             </RouterLink>
           </div>
         </div>
 
-        <div :style="[isLoading ? {'position': 'absolute', 'height': '100%', 'width': '100%'} : {'display': 'none'}]">
-          <VLoader size="large" :active="isLoading" :translucent="true" :style="{height: '100%'}"></VLoader>
+        <div
+          :style="[
+            isLoading
+              ? { position: 'absolute', height: '100%', width: '100%' }
+              : { display: 'none' },
+          ]"
+        >
+          <VLoader
+            size="large"
+            :active="isLoading"
+            :translucent="true"
+            :style="{ height: '100%' }"
+          ></VLoader>
         </div>
-        
+
         <div class="hero-body">
           <div class="container">
             <div class="columns">
               <div class="column is-12">
-        
                 <div class="auth-content">
                   <h2>{{ t('auth.title') }}</h2>
                   <p>{{ t('auth.subtitle') }}</p>
-                  <RouterLink :to="{ name: 'app' }">
+                  <RouterLink to="/app">
                     {{ t('auth.action.login') }}
                   </RouterLink>
                 </div>
@@ -138,84 +164,71 @@ useHead({
                   <form @submit="onSignup">
                     <div id="signin-form" class="login-form">
                       <SignupField
+                        :type="'text'"
                         :name="'firstName'"
                         :icon="'feather:user'"
                         :placeholder="'auth.placeholder.firstName'"
                       />
 
                       <SignupField
+                        :type="'text'"
                         :name="'lastName'"
                         :icon="'feather:users'"
                         :placeholder="'auth.placeholder.lastName'"
                       />
 
                       <SignupField
+                        :type="'text'"
                         :name="'email'"
                         :icon="'feather:mail'"
                         :placeholder="'auth.placeholder.email'"
                       />
 
                       <SignupField
+                        :type="'password'"
                         :name="'password'"
                         :icon="'feather:lock'"
                         :placeholder="'auth.placeholder.password'"
                       />
 
                       <SignupField
+                        :type="'password'"
                         :name="'passwordCheck'"
                         :icon="'feather:lock'"
                         :placeholder="'auth.placeholder.passwordCheck'"
                       />
-                      
+
                       <SignupField
+                        :type="'text'"
                         :name="'name'"
                         :icon="'lnil lnil-briefcase'"
                         :placeholder="'auth.placeholder.name'"
                       />
 
                       <SignupField
+                        :type="'text'"
                         :name="'country'"
                         :icon="'lnir lnir-house'"
                         :placeholder="'auth.placeholder.country'"
                       />
-                      
+
                       <SignupField
+                        :type="'text'"
                         :name="'city'"
                         :icon="'lnir lnir-house'"
                         :placeholder="'auth.placeholder.city'"
                       />
-                      
+
                       <SignupField
+                        :type="'text'"
                         :name="'phone'"
                         :icon="'lnir lnir-phone-ring'"
                         :placeholder="'auth.placeholder.phone'"
                       />
 
-                      <!-- <VField>
-                        <VControl class="setting-item">
-                          <label for="promotional" class="form-switch is-primary">
-                            <Field
-                              id="promotional"
-                              type="checkbox"
-                              name="promotional"
-                              value="yes"
-                            />
-
-                            <i aria-hidden="true"></i>
-                          </label>
-                          <div class="setting-meta">
-                            <label for="promotional">
-                              <span>{{ t('auth.label.promotional') }} </span>
-                            </label>
-                          </div>
-                        </VControl>
-                      </VField> -->
-
-                      <!-- Submit -->
-
                       <VField>
                         <VControl class="login">
-                          <VButton type="submit" color="primary" bold fullwidth raised >
+                          <VButton type="submit" color="primary" bold fullwidth raised>
                             {{ t('auth.action.signup') }}
                           </VButton>
                         </VControl>
@@ -223,7 +236,6 @@ useHead({
                     </div>
                   </form>
                 </div>
-
               </div>
             </div>
           </div>
@@ -237,14 +249,15 @@ useHead({
         <div class="hero-body">
           <div class="columns">
             <div class="column is-10 is-offset-1">
+              <p>тут буде гарна картинка</p>
               <img
                 class="light-image has-light-shadow has-light-border"
-                src="/@src/assets/illustrations/apps/vuero-banking-light.png?format=webp"
+                src="/@src/assets/illustrations/apps/vuero-banking-light.webp"
                 alt=""
               />
               <img
                 class="dark-image has-light-shadow"
-                src="/@src/assets/illustrations/apps/vuero-banking-dark.png?format=webp"
+                src="/@src/assets/illustrations/apps/vuero-banking-dark.webp"
                 alt=""
               />
             </div>

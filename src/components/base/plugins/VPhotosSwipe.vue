@@ -6,7 +6,6 @@ let instances = 0
 </script>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import PhotoSwipe from 'photoswipe'
 import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
@@ -328,9 +327,7 @@ const resetAngle = () => {
           :src="item.thumbnail"
           :alt="item.alt"
           itemprop="thumbnail"
-          @error.once="
-            (event) => onceImageErrored(event, `${item.w || '100'}x${item.h || '100'}`)
-          "
+          @error.once="onceImageErrored(item.w, item.h)"
         />
       </a>
     </figure>
@@ -399,7 +396,7 @@ const resetAngle = () => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .gallery-thumbnail {
   display: inline;
   margin: 5px;

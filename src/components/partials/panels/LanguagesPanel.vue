@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useStorage } from '@vueuse/core'
 
 import { usePanels } from '/@src/stores/panels'
 
@@ -12,7 +10,7 @@ const { locale, t } = useI18n()
  * We use the same storage key as we use in the /src/i18n.ts file
  * so if user reload the page, the selected language will be the same
  */
-const defaultLocale = useStorage('locale', navigator?.language || 'en')
+const defaultLocale = useStorage('locale', 'en')
 
 /**
  * Each time we change the locale, we persit it in the storage
@@ -156,8 +154,6 @@ watch(locale, () => {
 </template>
 
 <style lang="scss">
-@import '../../../scss/abstracts/mixins';
-
 .right-panel-wrapper {
   &.is-languages {
     .right-panel-head {

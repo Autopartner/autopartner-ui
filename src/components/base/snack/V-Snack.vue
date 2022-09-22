@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 export type VSnackColor = 'primary' | 'success' | 'info' | 'warning' | 'danger'
 export type VSnackSize = 'small'
 export interface VSnackProps {
@@ -53,6 +51,15 @@ const isIconify = computed(() => {
     <div v-else-if="props.image" class="snack-media">
       <img class="avatar" :src="props.image" alt="" @error.once="placeholderHandler" />
     </div>
+    <VTabs
+      :tabs="[
+        {
+          label: '',
+          value: '',
+          to: '/azea',
+        },
+      ]"
+    />
     <span class="snack-text">
       <slot name="title">{{ props.title }}</slot>
     </span>

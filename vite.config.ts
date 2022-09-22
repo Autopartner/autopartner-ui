@@ -1,20 +1,21 @@
+import { resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
-import path from 'path'
 import Vue from '@vitejs/plugin-vue'
-import Pages from 'vite-plugin-pages'
+import VueRouter from 'unplugin-vue-router/vite'
+import { VueRouterAutoImports } from 'unplugin-vue-router'
 import Components from 'unplugin-vue-components/vite'
+import AutoImport from 'unplugin-auto-import/vite'
 import ViteFonts from 'vite-plugin-fonts'
 import ViteRadar from 'vite-plugin-radar'
 import PurgeIcons from 'vite-plugin-purge-icons'
-import { imagetools } from 'vite-imagetools'
 import ImageMin from 'vite-plugin-imagemin'
 // import VueroDocumentation from './vite-plugin-vuero-doc/index'
-import { vueI18n } from '@intlify/vite-plugin-vue-i18n'
+import vueI18n from '@intlify/vite-plugin-vue-i18n'
 import { VitePWA } from 'vite-plugin-pwa'
 import purgecss from 'rollup-plugin-purgecss'
 
-const SILENT = Boolean(process.env.SILENT) ?? false
-const SOURCE_MAP = Boolean(process.env.SOURCE_MAP) ?? false
+const MINIFY_IMAGES = process.env.MINIFY ? process.env.MINIFY === 'true' : false
 
 /**
  * This is the main configuration file for vitejs
@@ -32,7 +33,12 @@ export default defineConfig({
   // Directory to serve as plain static assets.
   publicDir: 'public',
   // Adjust console output verbosity.
-  logLevel: SILENT ? 'error' : 'info',
+  logLevel: 'info',
+  // development server configuration
+  server: {
+    // Vite 3 now defaults to 5173, but you can override it with the port option.
+    port: 3000,
+  },
   /**
    * By default, Vite will crawl your index.html to detect dependencies that
    * need to be pre-bundled. If build.rollupOptions.input is specified,
@@ -46,6 +52,7 @@ export default defineConfig({
       '@ckeditor/ckeditor5-build-classic',
       '@iconify/iconify',
       '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.min.js',
+      '@vee-validate/zod',
       '@vueuse/core',
       '@vueuse/head',
       '@vueform/multiselect',
@@ -55,6 +62,7 @@ export default defineConfig({
       'dayjs',
       'dropzone',
       'dragula',
+      'defu',
       'filepond',
       'filepond-plugin-file-validate-size',
       'filepond-plugin-file-validate-type',
@@ -77,12 +85,14 @@ export default defineConfig({
       'vue-scrollto',
       'vue3-apexcharts',
       'vue-tippy',
+      'vue-i18n',
       'simplebar',
       'simple-datatables',
       'tiny-slider/src/tiny-slider',
       'vue-accessible-color-picker',
-      'yup',
+      'zod',
     ],
+    disabled: false,
   },
   // Will be passed to @rollup/plugin-alias as its entries option.
   resolve: {
@@ -94,20 +104,13 @@ export default defineConfig({
     ],
   },
   build: {
-    minify: false,
-    sourcemap: SOURCE_MAP,
-    // Turning off brotliSize display can slightly reduce packaging time
-    brotliSize: !SILENT,
-    chunkSizeWarningLimit: 2000,
-    // minify: true,
-
-    /**
-     * Uncomment this section to build the demo with missing images
-     * Don't forget to remove this section when you replaced assets with yours
-     */
-    rollupOptions: {
-      external: [/\/demo\/.*/],
-    },
+    minify: 'terser',
+    // Do not warn about large chunks
+    chunkSizeWarningLimit: Infinity,
+    // Double the default size threshold for inlined assets
+    // https://vitejs.dev/config/build-options.html#build-assetsinlinelimit
+    assetsInlineLimit: 4096 * 2,
+    commonjsOptions: { include: [] },
   },
   plugins: [
     /**
@@ -125,22 +128,37 @@ export default defineConfig({
      * @see https://github.com/intlify/bundle-tools/tree/main/packages/vite-plugin-vue-i18n
      */
     vueI18n({
-      include: path.resolve(__dirname, './src/locales/**'),
+      // @ts-ignore
+      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
     }),
 
     /**
-     * vite-plugin-pages plugin generate routes based on file system
+     * unplugin-vue-router plugin generate routes based on file system
+     * allow to use typed routes and usage of defineLoader
      *
-     * @see https://github.com/hannoeru/vite-plugin-pages
+     * @see https://github.com/posva/unplugin-vue-router
+     * @see https://github.com/vuejs/rfcs/blob/ad69da2aee9242ef88f036713db68f3ef274bb1b/active-rfcs/0000-router-use-loader.md
      */
-    Pages({
-      nuxtStyle: false,
-      pagesDir: [
-        {
-          dir: 'src/pages',
-          baseRoute: '',
-        },
-      ],
+    VueRouter({
+      routesFolder: 'src/pages',
+
+      /**
+       * Data Fetching is an experimental feature from vue & vue-router
+       *
+       * @see https://github.com/vuejs/rfcs/discussions/460
+       * @see https://github.com/posva/unplugin-vue-router/tree/main/src/data-fetching
+       */
+      dataFetching: true,
+    }),
+
+    /**
+     * unplugin-auto-import allow to automaticaly import modules/components
+     *
+     * @see https://github.com/antfu/unplugin-auto-import
+     */
+    AutoImport({
+      dts: true,
+      imports: ['vue', '@vueuse/core', VueRouterAutoImports],
     }),
 
     /**
@@ -203,12 +221,13 @@ export default defineConfig({
      *
      * @see https://github.com/stafyniaksacha/vite-plugin-radar
      */
-    ViteRadar({
-      enableDev: true,
-      analytics: {
-        id: 'G-8PH6FM2JEL',
-      },
-    }),
+    !process.env.GTM_ID
+      ? undefined
+      : ViteRadar({
+          gtm: {
+            id: process.env.GTM_ID,
+          },
+        }),
 
     /**
      * vite-plugin-pwa generate manifest.json and register services worker to enable PWA
@@ -271,48 +290,40 @@ export default defineConfig({
     }),
 
     /**
-     * vite-imagetools plugin allow to perform transformation (blur, resize, crop, etc)
-     * on images at build time
-     *
-     * @see https://github.com/JonasKruckenberg/vite-imagetools
-     */
-    imagetools({
-      silent: SILENT,
-    }),
-
-    /**
      * vite-plugin-imagemin optimize all images sizes from public or asset folder
      *
      * @see https://github.com/anncwb/vite-plugin-imagemin
      */
-    ImageMin({
-      verbose: !SILENT,
-      gifsicle: {
-        optimizationLevel: 7,
-        interlaced: false,
-      },
-      optipng: {
-        optimizationLevel: 7,
-      },
-      mozjpeg: {
-        quality: 60,
-      },
-      pngquant: {
-        quality: [0.8, 0.9],
-        speed: 4,
-      },
-      svgo: {
-        plugins: [
-          {
-            name: 'removeViewBox',
-            active: false,
+    !MINIFY_IMAGES
+      ? undefined
+      : ImageMin({
+          verbose: VERBOSE,
+          gifsicle: {
+            optimizationLevel: 7,
+            interlaced: false,
           },
-          {
-            name: 'removeEmptyAttrs',
-            active: false,
+          optipng: {
+            optimizationLevel: 7,
           },
-        ],
-      },
-    }),
+          mozjpeg: {
+            quality: 60,
+          },
+          pngquant: {
+            quality: [0.8, 0.9],
+            speed: 4,
+          },
+          svgo: {
+            plugins: [
+              {
+                name: 'removeViewBox',
+                active: false,
+              },
+              {
+                name: 'removeEmptyAttrs',
+                active: false,
+              },
+            ],
+          },
+        }),
   ],
 })

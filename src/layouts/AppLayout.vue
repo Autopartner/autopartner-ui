@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { ref, watchPostEffect, watch } from 'vue'
-import { useRoute } from 'vue-router'
-
 import type { SidebarTheme } from '/@src/components/navigation/desktop/Sidebar.vue'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 
@@ -62,7 +59,7 @@ watch(
       @toggle="isMobileSidebarOpen = !isMobileSidebarOpen"
     >
       <template #brand>
-        <RouterLink :to="{ name: 'index' }" class="navbar-item is-brand">
+        <RouterLink to="app" class="navbar-item is-brand">
           <AnimatedLogo width="38px" height="38px" />
         </RouterLink>
 
@@ -80,7 +77,7 @@ watch(
     >
       <template #links>
         <li>
-          <RouterLink :to="{ name: 'app' }">
+          <RouterLink to="app">
             <i aria-hidden="true" class="iconify" data-icon="feather:home"></i>
           </RouterLink>
         </li>
@@ -116,17 +113,9 @@ watch(
             <i
               aria-hidden="true"
               class="iconify sidebar-svg"
-              data-icon="feather:menu"
+              data-icon="feather:home"
             ></i>
           </a>
-        </li>
-      </template>
-        <template #links2>
-        <!-- Dashboards -->
-        <li>
-        <RouterLink :to="{ name: 'app' }">
-            <i aria-hidden="true" class="iconify" data-icon="feather:home"></i>
-          </RouterLink>
         </li>
       </template>
     </Sidebar>
