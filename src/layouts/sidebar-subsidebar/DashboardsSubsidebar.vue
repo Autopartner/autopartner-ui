@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const openSubsidebarLinks = ref('')
 const emit = defineEmits(['close'])
 </script>
 
@@ -27,51 +26,51 @@ const emit = defineEmits(['close'])
 
         <li class="divider"></li>
 
-        <VCollapseLinks v-model:open="openSubsidebarLinks" collapse-id="warehouse">
+        <VCollapseLinks>
           <template #header>
             Warehouse
             <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right" />
           </template>
 
           <RouterLink to="app" class="is-submenu">
-            <i aria-hidden="true" class="lnil lnil-user"></i>
+            <i class="lnir lnir-users" aria-hidden="true"></i>
             <span>Suppliers</span>
           </RouterLink>
 
           <RouterLink to="test-page" class="is-submenu">
-            <i aria-hidden="true" class="lnil "></i>
+            <i class="lnir lnir-cart-full" aria-hidden="true"></i>
             <span>Supplies</span>
           </RouterLink>
 
           <RouterLink to="app" class="is-submenu">
-            <i aria-hidden="true" class="lnil"></i>
+            <i class="lnir lnir-bricks" aria-hidden="true"></i>
             <span>Products</span>
           </RouterLink>
         </VCollapseLinks>
 
-        <VCollapseLinks v-model:open="openSubsidebarLinks" collapse-id="dictionaries">
+        <VCollapseLinks>
           <template #header>
             Dictionaries
             <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right" />
           </template>
 
           <RouterLink to="app" class="is-submenu">
-            <i aria-hidden="true" class="lnil"></i>
+            <i class="lnir lnir-user" aria-hidden="true"></i>
             <span>Users</span>
           </RouterLink>
 
           <RouterLink to="app" class="is-submenu">
-            <i aria-hidden="true" class="lnil"></i>
+            <i class="lnir lnir-users" aria-hidden="true"></i>
             <span>Clients</span>
           </RouterLink>
 
           <RouterLink to="app" class="is-submenu">
-            <i aria-hidden="true" class="lnil"></i>
+            <i class="lnir lnir-car-alt" aria-hidden="true"></i>
             <span>Cars</span>
           </RouterLink>
 
           <RouterLink to="app" class="is-submenu">
-            <i aria-hidden="true" class="lnil"></i>
+            <i class="lnir lnir-wrench" aria-hidden="true"></i>
             <span>Tasks</span>
           </RouterLink>
         </VCollapseLinks>
