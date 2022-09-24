@@ -4,10 +4,10 @@ import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('Main Dashboard')
+viewWrapper.setPageTitle('Orders')
 
 useHead({
-  title: 'Main Dashboard - My app',
+  title: 'Orders',
 })
 </script>
 

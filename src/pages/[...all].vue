@@ -16,7 +16,7 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 useHead({
-  title: `${t('page-title')} - Vuero`,
+  title: `${t('page-title')}`,
   meta: [
     {
       name: 'robots',
