@@ -14,6 +14,8 @@ declare module '@vue/runtime-core' {
     Dashboard: typeof import('./src/components/pages/dashboards/business/Dashboard.vue')['default']
     DashboardsMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/DashboardsMobileSubsidebar.vue')['default']
     DashboardsSubsidebar: typeof import('./src/layouts/sidebar-subsidebar/DashboardsSubsidebar.vue')['default']
+    FlexListUsers: typeof import('./src/components/pages/lists/FlexListUsers.vue')['default']
+    FlexTableDropdown: typeof import('./src/components/partials/dropdowns/FlexTableDropdown.vue')['default']
     FlightResultsDropdown: typeof import('./src/components/partials/dropdowns/FlightResultsDropdown.vue')['default']
     LandingEmptyNavigation: typeof import('./src/components/partials/landing/LandingEmptyNavigation.vue')['default']
     LandingFooter: typeof import('./src/components/partials/landing/LandingFooter.vue')['default']

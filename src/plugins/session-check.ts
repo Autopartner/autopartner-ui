@@ -27,15 +27,17 @@ export default definePlugin(async ({ router, api, pinia }) => {
 
   // 1. Check token validity at app startup
   if (userSession.isLoggedIn) {
-    try {
-      // Do api request call to retreive user profile.
-      // Note that the api is provided with json-server
-      const { data: user } = await api.get('/api/users/me')
-      userSession.setUser(user)
-    } catch (err) {
-      // delete stored token if it fails
-      userSession.logoutUser()
-    }
+
+    // TODO maybe we will use this later
+    // try {
+    //   // Do api request call to retreive user profile.
+    //   // Note that the api is provided with json-server
+    //   const { data: user } = await api.get('/api/users/me')
+    //   userSession.setUser(user)
+    // } catch (err) {
+    //   // delete stored token if it fails
+    //   userSession.logoutUser()
+    // }
   }
 
   router.beforeEach((to) => {
