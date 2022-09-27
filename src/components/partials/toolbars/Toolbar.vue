@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { routeLocationKey, routerKey } from 'vue-router';
 
 import { useDarkmode } from '/@src/stores/darkmode'
 import { usePanels } from '/@src/stores/panels'
+import { useUserSession } from '/@src/stores/userSession';
 
 const darkmode = useDarkmode()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const panels = usePanels()
+const userSession = useUserSession()
+const router = useRouter()
 
 const localFlagSrc = computed(() => {
   switch (locale.value) {
@@ -25,6 +29,12 @@ const localFlagSrc = computed(() => {
       return '/images/icons/flags/united-states-of-america.svg'
   }
 })
+
+const onLogout = () => {
+  userSession.logoutUser()
+  router.push({ name: '/auth/login' })
+}
+
 </script>
 
 <template>
@@ -53,6 +63,16 @@ const localFlagSrc = computed(() => {
     >
       <img :src="localFlagSrc" alt="" />
     </a>
+
+    <VButton
+      class="logout-button"
+      icon="feather:log-out"
+      color="primary"
+      role="menuitem"
+      @click="onLogout"
+    >
+      {{ t('auth.action.logout') }}
+    </VButton>
 
     <slot></slot>
   </div>

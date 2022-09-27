@@ -9,7 +9,8 @@
     },
     "action": {
       "login": "I already have an account",
-      "signup": "Sign Up"
+      "signup": "Sign Up",
+      "logout": "Log out"
     },
     "placeholder": {
       "email": "Email Address",
