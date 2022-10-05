@@ -59,7 +59,7 @@ const emit = defineEmits(['close'])
             <span>Users</span>
           </RouterLink>
 
-          <RouterLink to="app" class="is-submenu">
+          <RouterLink to="clients" class="is-submenu">
             <i class="lnir lnir-users" aria-hidden="true"></i>
             <span>Clients</span>
           </RouterLink>
