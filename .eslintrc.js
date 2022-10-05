@@ -48,7 +48,11 @@ module.exports = {
         'vuejs-accessibility/form-control-has-label': 'off',
         'vuejs-accessibility/label-has-for': 'off',
         'vuejs-accessibility/anchor-has-content': 'off',
-        'endOfLine': 'auto'
+        'endOfLine': 'auto',
+        'vue/no-v-text-v-html-on-component': 'off',
+        'vue/prefer-import-from-vue': 'off',
+        'vue/valid-attribute-name': 'off'
+        
       },
     },
   ],

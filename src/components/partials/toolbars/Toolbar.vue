@@ -64,15 +64,15 @@ const onLogout = () => {
       <img :src="localFlagSrc" alt="" />
     </a>
 
-    <VButton
+    <VIconButton
       class="logout-button"
       icon="feather:log-out"
       color="primary"
       role="menuitem"
       @click="onLogout"
-    >
-      {{ t('auth.action.logout') }}
-    </VButton>
+      circle
+      raised
+    />
 
     <slot></slot>
   </div>
