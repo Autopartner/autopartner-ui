@@ -4,14 +4,18 @@ import {useUserStore} from "/@src/stores/users";
 
 const page = ref(42)
 const filters = ref('')
+const isLoading = ref(false)
 
 const user = useUserStore()
 
 onMounted(async () => {
   try {
-    user.loadUsers()
+    isLoading.value = true
+    await user.loadUsers()
+    isLoading.value = false
   } catch (e: any) {
     console.error(e)
+    isLoading.value = false
   }
 })
 
@@ -34,27 +38,81 @@ const filteredData = computed(() => {
   if (!filters.value) {
     return user.users
   } else {
-    const filterRe = new RegExp(filters.value, 'i')
+    const filterRe = new RegExp(filters.value, 'gi')
     return user.users.filter((item) => {
       return (
-        item.firstName.match(filterRe) ||
-        item.lastName.match(filterRe) ||
-        item.phone.match(filterRe) ||
-        item.email.match(filterRe) ||
-        item.role.match(filterRe)
+        item.firstName && item.firstName.match(filterRe) ||
+        item.lastName && item.lastName.match(filterRe) ||
+        item.phone && item.phone.match(filterRe) ||
+        item.email && item.email.match(filterRe) ||
+        item.authorities && item.authorities.match(filterRe)
       )
     })
   }
 })
+
+debouncedWatch(
+  filters,
+  () => {
+    if (filters.value.length < 3) {
+      return
+    }
+
+    // dataLayer and is injected via vite-plugin-radar
+    if (window) {
+      window.dataLayer = window.dataLayer || []
+      window.dataLayer.push({
+        event: 'search',
+        search_term: filters.value,
+      })
+    }
+  },
+  { debounce: 300 }
+)
+
+const renderRole = (role: string) => {
+  const roleMap: any = {
+    'ROLE_ADMIN': {
+      color: 'primary',
+      name: 'owner'
+    },
+    'ROLE_USER': {
+      color: 'blue',
+      name: 'user'
+    },
+    'ROLE_CLIENT': {
+      color: 'green',
+      name: 'client'
+    }
+  }
+
+  return roleMap[role]
+}
 </script>
 
 <template>
+
+  <div
+    :style="[
+    isLoading
+      ? { position: 'absolute', height: '100%', width: '100%' }
+      : { display: 'none' },
+    ]"
+  >
+    <VLoader
+      size="large"
+      :active="isLoading"
+      :translucent="true"
+      :style="{ height: '100%' }"
+    ></VLoader>
+  </div>
+
   <div>
     <div class="list-flex-toolbar flex-list-v1">
       <VField>
         <VControl icon="feather:search">
           <input
-            v-model="filters"
+            v-model.trim="filters"
             class="input custom-text-filter"
             placeholder="Search..."
           />
@@ -113,7 +171,12 @@ const filteredData = computed(() => {
                   <span class="light-text">{{ item.email }}</span>
                 </VFlexTableCell>
                 <VFlexTableCell>
-                  <span class="light-text">{{ item.role }}</span>
+                  <VTag
+                    rounded
+                    :color=renderRole(item.authorities).color
+                  >
+                  {{ renderRole(item.authorities).name }}
+                  </VTag>
                 </VFlexTableCell>
                 <VFlexTableCell :column="{ align: 'end' }">
                   <FlexTableDropdown />

@@ -6,7 +6,7 @@ export interface User {
   lastName: string
   phone: string
   email: string
-  role: string
+  authorities: string
 }
 
 interface response {
