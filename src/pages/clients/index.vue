@@ -2,7 +2,7 @@
 import {useHead} from '@vueuse/head'
 
 import {useViewWrapper} from '/@src/stores/viewWrapper'
-import { optionsUsers } from '/@src/data/v-datatable/users-datatable'
+import { optionsUsers } from '/@src/data/v-datatable/clients-datatable'
 
 const viewWrapper = useViewWrapper()
 viewWrapper.setPageTitle('Clients')
