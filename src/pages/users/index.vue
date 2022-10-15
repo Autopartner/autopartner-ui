@@ -64,7 +64,7 @@ const dataForTable = computed(() => {
 
     <div>
       <div class="page-content-inner">
-        <div class="flex-list-wrapper flex-list-v1">
+        <div class="users-table">
           <!--List Empty Search Placeholder -->
           <VPlaceholderPage
             v-if="!user.users.length"
@@ -95,3 +95,8 @@ const dataForTable = computed(() => {
     </div>
   </div>
 </template>
+<style lang="scss">
+  .is-dark .users-table .search-results {
+    background: none;
+  }
+</style>
