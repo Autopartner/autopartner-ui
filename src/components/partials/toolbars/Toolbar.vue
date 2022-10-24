@@ -14,16 +14,8 @@ const router = useRouter()
 
 const localFlagSrc = computed(() => {
   switch (locale.value) {
-    case 'fr':
-      return '/images/icons/flags/france.svg'
-    case 'es':
-      return '/images/icons/flags/spain.svg'
-    case 'es-MX':
-      return '/images/icons/flags/mexico.svg'
-    case 'de':
-      return '/images/icons/flags/germany.svg'
-    case 'zh-CN':
-      return '/images/icons/flags/china.svg'
+    case 'ua':
+      return '/images/icons/flags/ukraine.png'
     case 'en':
     default:
       return '/images/icons/flags/united-states-of-america.svg'
@@ -65,9 +57,8 @@ const onLogout = () => {
     </a>
 
     <VIconButton
-      class="logout-button"
+      class="logout-button toolbar-link right-panel-trigger"
       icon="feather:log-out"
-      color="primary"
       role="menuitem"
       @click="onLogout"
       circle

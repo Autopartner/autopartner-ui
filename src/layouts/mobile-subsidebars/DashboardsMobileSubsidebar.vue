@@ -43,7 +43,7 @@
             <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right" />
           </template>
 
-          <RouterLink to="app" class="is-submenu">
+          <RouterLink to="users" class="is-submenu">
             <i class="lnir lnir-user" aria-hidden="true"></i>
             <span>Users</span>
           </RouterLink>

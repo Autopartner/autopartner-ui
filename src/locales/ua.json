@@ -1,0 +1,62 @@
+{
+  "select-language": "Оберіть мову",
+  "cancel-label": "Відмінити",
+  "auth": {
+    "title": "Приєднатися",
+    "subtitle": "Почтніть створювати обліковий запис",
+    "label": {
+      "promotional": "Receive promotional offers"
+    },
+    "action": {
+      "login": "В мене вже є акаунт",
+      "signup": "Зареєструватися",
+      "logout": "Вийти"
+    },
+    "placeholder": {
+      "email": "Пошта",
+      "password": "Пароль",
+      "passwordCheck": "Повторити пароль",
+      "name": "Назва компанії",
+      "country": "Країна",
+      "city": "Місто",
+      "firstName": "Ім'я",
+      "lastName": "Прізвище",
+      "phone": "+38"
+
+    },
+    "errors": {
+      "email": {
+        "required": "Enter your email, it will be required to login",
+        "format": "Please, enter a valid email"
+      },
+      "password": {
+        "required": "Enter your password with at least 8 characters, it will be required to login",
+        "length": "The password should contains at least 8 characters"
+      },
+      "passwordCheck": {
+        "required": "Please, confirm your password",
+        "match": "The password does not match"
+      },
+      "name": {
+        "required": "Enter your company name"
+      },
+      "country": {
+        "required": "Enter your country"
+      },
+      "city": {
+        "required": "Enter your city"
+      },
+      "firstName": {
+        "required": "Enter your first name"
+      },
+      "lastName": {
+        "required": "Enter your last name"
+      },
+      "phone": {
+        "required": "Enter your phone number",
+        "match" : "This phone number is not valid"
+
+      }
+    }
+  }
+}
