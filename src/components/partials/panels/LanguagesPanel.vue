@@ -10,10 +10,10 @@ const { locale, t } = useI18n()
  * We use the same storage key as we use in the /src/i18n.ts file
  * so if user reload the page, the selected language will be the same
  */
-const defaultLocale = useStorage('locale', 'en')
+const defaultLocale = useStorage('locale', 'ua')
 
 /**
- * Each time we change the locale, we persit it in the storage
+ * Each time we change the locale, we persist it in the storage
  */
 watch(locale, () => {
   defaultLocale.value = locale.value
@@ -54,7 +54,6 @@ watch(locale, () => {
                 type="radio"
                 name="language_selection"
                 value="en"
-                checked
               />
               <div class="language-option-inner">
                 <img src="/images/icons/flags/united-states-of-america.svg" alt="" />
@@ -67,9 +66,9 @@ watch(locale, () => {
 
           <div class="language-box">
             <div class="language-option">
-              <input v-model="locale" type="radio" name="language_selection" value="fr" />
+              <input v-model="locale" type="radio" name="language_selection" value="ua" checked/>
               <div class="language-option-inner">
-                <img src="/images/icons/flags/france.svg" alt="" />
+                <img src="/images/icons/flags/ukraine.png" alt="" />
                 <div class="indicator">
                   <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
                 </div>
@@ -77,77 +76,8 @@ watch(locale, () => {
             </div>
           </div>
 
-          <div class="language-box">
-            <div class="language-option">
-              <input v-model="locale" type="radio" name="language_selection" value="es" />
-              <div class="language-option-inner">
-                <img src="/images/icons/flags/spain.svg" alt="" />
-                <div class="indicator">
-                  <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="language-box">
-            <div class="language-option">
-              <input v-model="locale" type="radio" name="language_selection" value="de" />
-              <div class="language-option-inner">
-                <img src="/images/icons/flags/germany.svg" alt="" />
-                <div class="indicator">
-                  <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="language-box">
-            <div class="language-option">
-              <input
-                v-model="locale"
-                type="radio"
-                name="language_selection"
-                value="es-MX"
-              />
-              <div class="language-option-inner">
-                <img src="/images/icons/flags/mexico.svg" alt="" />
-                <div class="indicator">
-                  <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="language-box">
-            <div class="language-option">
-              <input
-                v-model="locale"
-                type="radio"
-                name="language_selection"
-                value="zh-CN"
-              />
-              <div class="language-option-inner">
-                <img src="/images/icons/flags/china.svg" alt="" />
-                <div class="indicator">
-                  <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div class="img-wrap has-text-centered">
-          <img
-            class="light-image"
-            src="/@src/assets/illustrations/right-panel/languages.svg"
-            alt=""
-          />
-          <img
-            class="dark-image"
-            src="/@src/assets/illustrations/right-panel/languages-dark.svg"
-            alt=""
-          />
-        </div>
       </div>
     </div>
   </div>
