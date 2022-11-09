@@ -33,11 +33,11 @@ const dataForTable = computed(() => {
       ...optionsUsers,
       data: {
         ...optionsUsers.data,
-        data: 
+        data:
           user.users.map(user => {
-            return [`${user.firstName} ${user.lastName}`, user.phone, user.email, user.authorities]
+            return [`${user.firstName} ${user.lastName}`, user.phone, user.email, user.authorities, user.id]
           })
-        
+
       }
     }
   }
@@ -87,7 +87,7 @@ const dataForTable = computed(() => {
               />
             </template>
           </VPlaceholderPage>
-          
+
           <VSimpleDatatables :options="dataForTable" v-if="user.users.length"/>
 
         </div>
