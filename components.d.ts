@@ -33,7 +33,6 @@ declare module '@vue/runtime-core' {
     Sidebar: typeof import('./src/components/navigation/desktop/Sidebar.vue')['default']
     SignupField: typeof import('./src/components/pages/dashboards/business/SignupField.vue')['default']
     StackPopoverContent: typeof import('./src/components/partials/popover/StackPopoverContent.vue')['default']
-    SubSidebarLi: typeof import('./src/layouts/sidebar-subsidebar/sub_sidebar_elements/SubSidebarLi.vue')['default']
     Toolbar: typeof import('./src/components/partials/toolbars/Toolbar.vue')['default']
     UIWidget: typeof import('./src/components/partials/widgets/ui-creative/UIWidget.vue')['default']
     UserProfileDropdown: typeof import('./src/components/partials/dropdowns/UserProfileDropdown.vue')['default']
