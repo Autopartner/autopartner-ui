@@ -86,30 +86,6 @@ const getRole = (role: string) => {
     <div>
       <div class="page-content-inner">
         <div class="users-table">
-          <!--List Empty Search Placeholder -->
-          <VPlaceholderPage
-            v-if="!user.users.length"
-            title="We couldn't find any matching results."
-            subtitle="Too bad. Looks like we couldn't find any matching results for the
-            search terms you've entered. Please try different search terms or
-            criteria."
-            larger
-          >
-            <template #image>
-              <img
-                class="light-image"
-                src="/@src/assets/illustrations/placeholders/search-4.svg"
-                alt=""
-              />
-              <img
-                class="dark-image"
-                src="/@src/assets/illustrations/placeholders/search-4-dark.svg"
-                alt=""
-              />
-            </template>
-          </VPlaceholderPage>
-
-          <VSimpleDatatables :options="dataForTable" v-if="user.users.length"/>
 
           <VFlexTableWrapper
             :data="dataForTable?.data"
@@ -141,10 +117,8 @@ const getRole = (role: string) => {
             }">
 
               <template #default="wrapperState">
-                <!-- We can place any content inside the default slot-->
                 <VFlexTableToolbar>
                   <template #left>
-                    <!-- We can bind wrapperState.searchInput to any input -->
                     <VField>
                       <VControl icon="feather:search">
                         <input
@@ -155,15 +129,18 @@ const getRole = (role: string) => {
                         />
                       </VControl>
                     </VField>
+
+                    <VButton>Create new</VButton>
+
                   </template>
 
                   <template #right>
-                    <!-- We can also bind wrapperState.limit -->
+
                     <VField>
                       <VControl>
                         <div class="select is-rounded">
                           <select v-model="wrapperState.limit">
-                            <option :value="1">1 results per page</option>
+                            <option :value="5">5 results per page</option>
                             <option :value="10">10 results per page</option>
                             <option :value="15">15 results per page</option>
                             <option :value="25">25 results per page</option>
@@ -175,9 +152,9 @@ const getRole = (role: string) => {
                   </template>
                 </VFlexTableToolbar>
 
-                <!-- 
-                  The VFlexTable "data" and "columns" props 
-                  will be inherited from parent VFlexTableWrapper 
+                <!--
+                  The VFlexTable "data" and "columns" props
+                  will be inherited from parent VFlexTableWrapper
                 -->
                 <VFlexTable rounded>
                   <!-- Custom "name" cell content -->
@@ -192,14 +169,10 @@ const getRole = (role: string) => {
                       </div>
                     </template>
 
-					<template v-if="column.key === 'actions'">
+                    <template v-if="column.key === 'actions'">
                       <div class="has-text-right">
-                        <VButton>
-							Edit
-						</VButton>
-						<VButton>
-							Remove
-						</VButton>
+                          <VButton>Edit</VButton>
+                          <VButton>Remove</VButton>
                       </div>
                     </template>
                   </template>
