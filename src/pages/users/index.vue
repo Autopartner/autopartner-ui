@@ -93,7 +93,8 @@ const getRole = (role: string) => {
               name: {
                 label: 'Name',
                 sortable: true,
-                searchable: true
+                searchable: true,
+                grow: true
               },
               phone: {
                 label: 'Phone',
@@ -125,7 +126,7 @@ const getRole = (role: string) => {
                           v-model="wrapperState.searchInput"
                           type="text"
                           class="input is-rounded"
-                          placeholder="Filter..."
+                          placeholder="Search..."
                         />
                       </VControl>
                     </VField>
@@ -152,12 +153,7 @@ const getRole = (role: string) => {
                   </template>
                 </VFlexTableToolbar>
 
-                <!--
-                  The VFlexTable "data" and "columns" props
-                  will be inherited from parent VFlexTableWrapper
-                -->
                 <VFlexTable rounded>
-                  <!-- Custom "name" cell content -->
                   <template #body-cell="{ row, column }">
                     <template v-if="column.key === 'role'">
                       <div class="has-text-right">
@@ -178,7 +174,6 @@ const getRole = (role: string) => {
                   </template>
                 </VFlexTable>
 
-                <!-- Table Pagination with wrapperState.page binded-->
                 <VFlexPagination
                   v-model:current-page="wrapperState.page"
                   class="mt-6"
