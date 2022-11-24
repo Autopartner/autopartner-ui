@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {useHead} from '@vueuse/head'
-
 import {useViewWrapper} from '/@src/stores/viewWrapper'
 import {useUserStore} from "/@src/stores/users";
 
@@ -12,7 +11,7 @@ useHead({
 })
 
 const isLoading = ref(false)
-
+const removeModalOpen = ref(false)
 const user = useUserStore()
 
 onMounted(async () => {
@@ -114,6 +113,7 @@ const getRole = (role: string) => {
               actions: {
                 label: 'Actions',
                 align: 'end',
+
               },
             }">
 
@@ -166,10 +166,10 @@ const getRole = (role: string) => {
                     </template>
 
                     <template v-if="column.key === 'actions'">
-                      <div class="has-text-right">
-                          <VButton>Edit</VButton>
-                          <VButton>Remove</VButton>
-                      </div>
+                        <VButtons>
+                          <VIconButton icon="feather:edit"/>
+                          <VIconButton icon="feather:trash" @click="removeModalOpen = true"/>
+                        </VButtons>
                     </template>
                   </template>
                 </VFlexTable>
@@ -189,6 +189,24 @@ const getRole = (role: string) => {
       </div>
     </div>
   </div>
+
+  <VModal
+    :open="removeModalOpen"
+    actions="center"
+    size="small"
+    @close="removeModalOpen = false"
+  >
+    <template #content>
+      <VPlaceholderSection
+        title="Remove"
+        subtitle="Are you sure?"
+      />
+    </template>
+    <template #action>
+      <VButton color="primary" raised @click="">Remove</VButton>
+    </template>
+  </VModal>
+
 </template>
 <style lang="scss">
   .is-dark .users-table .search-results {
