@@ -11,7 +11,6 @@ useHead({
 })
 
 const isLoading = ref(false)
-const removeModalOpen = ref(false)
 const user = useUserStore()
 
 onMounted(async () => {
@@ -168,7 +167,7 @@ const getRole = (role: string) => {
                     <template v-if="column.key === 'actions'">
                         <VButtons>
                           <VIconButton icon="feather:edit"/>
-                          <VIconButton icon="feather:trash" @click="removeModalOpen = true"/>
+                          <VIconButton icon="feather:trash" @click="user.selectedUser = row; user.deleteConfirmationOpen = true;"/>
                         </VButtons>
                     </template>
                   </template>
@@ -190,22 +189,7 @@ const getRole = (role: string) => {
     </div>
   </div>
 
-  <VModal
-    :open="removeModalOpen"
-    actions="center"
-    size="small"
-    @close="removeModalOpen = false"
-  >
-    <template #content>
-      <VPlaceholderSection
-        title="Remove"
-        subtitle="Are you sure?"
-      />
-    </template>
-    <template #action>
-      <VButton color="primary" raised @click="">Remove</VButton>
-    </template>
-  </VModal>
+  <DeleteUserModal />
 
 </template>
 <style lang="scss">
