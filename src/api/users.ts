@@ -22,3 +22,13 @@ export const fetchUsers = async (): Promise<User[]> => {
         return error.response.data.message
     }
 }
+
+export const deleteUser = async (id: number): Promise<any> => {
+  const api = useApi()
+  try {
+    const response : response =  await api.delete(`/api/v1/users/${id}`)
+    return response.data
+  } catch (error : any) {
+    return error.response.data.message
+  }
+}

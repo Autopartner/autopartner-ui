@@ -1,11 +1,13 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref } from 'vue'
-import {fetchUsers, User} from "/@src/api/users";
+import {fetchUsers, deleteUser, User} from "/@src/api/users";
 
 export const useUserStore = defineStore('user', () => {
 
   const users = ref<User[]>([])
+  const selectedUser = ref<User>()
   const loading = ref(false)
+  const deleteConfirmationOpen = ref(false)
 
   async function loadUsers() {
     if (loading.value) return
@@ -19,9 +21,19 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  async function remove() {
+    if (selectedUser.value) {
+      await deleteUser(selectedUser.value.id)
+      await loadUsers()
+    }
+  }
+
   return {
     users,
-    loadUsers
+    selectedUser,
+    loadUsers,
+    deleteConfirmationOpen,
+    remove
   } as const
 })
 
